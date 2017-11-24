@@ -95,6 +95,37 @@ namespace CRUD_Operations_Angular.Web.Controllers
             }
             return projDTO;
         }
+
+        [HttpPost]
+        [Route("getbyids")]
+        public IEnumerable<ProjectViewModel> GetByIds([FromBody]IEnumerable<int> projectsIds)
+        {
+            List<ProjectViewModel> resultProjects = new List<ProjectViewModel>();
+            using (ApplicationDbContext context = new ApplicationDbContext())
+            {
+                IRepository<Project> repository = new Repository<Project>(context);
+                var projects = repository.GetAll();
+                foreach (Project tempProject in projects)
+                {
+                    if (projectsIds.Contains(tempProject.Id))
+                    {
+                        resultProjects.Add(new ProjectViewModel
+                        {
+                            name = tempProject.Name,
+                            description = tempProject.Description,
+                            startDay = tempProject.StartDate.Day,
+                            startMonth = tempProject.StartDate.Month,
+                            startYear = tempProject.StartDate.Year,
+                            endDay = tempProject.EndDate.Day,
+                            endMonth = tempProject.EndDate.Month,
+                            endYear = tempProject.EndDate.Year
+                        });
+                    }
+                }
+            }
+            return resultProjects;
+        }
+
         [HttpPost]
         [Route("[action]")]
         public void Create([FromBody]ProjectViewModel projectDto)
@@ -121,26 +152,16 @@ namespace CRUD_Operations_Angular.Web.Controllers
             using (ApplicationDbContext context = new ApplicationDbContext())
             {
                 IRepository<Project> repository = new Repository<Project>(context);
-                List<UsersProjects> usersProjectsList = new List<UsersProjects>();
-                foreach (UsersProjectsViewModel model in projectDto.users)
-                {
-                    usersProjectsList.Add(new UsersProjects()
-                    {
-                        UserId   = model.UserId,
-                        ProjectId = model.ProjectId                     
-                    });
-                }
+                Project projectWithUsers = repository.Get(projectDto.id, proj => proj.Users);
 
-                Project project = new Project()
-                {
-                    Id = projectDto.id,
-                    Name = projectDto.name,
-                    Description = projectDto.description,
-                    StartDate = new DateTime(projectDto.startYear, projectDto.startMonth, projectDto.startDay),
-                    EndDate = new DateTime(projectDto.endYear, projectDto.endMonth, projectDto.endDay),
-                    Users = usersProjectsList                    
-                };
-                repository.Update(project);
+                projectWithUsers.Name = projectDto.name;
+                projectWithUsers.Description = projectDto.description;
+                projectWithUsers.StartDate =
+                    new DateTime(projectDto.startYear, projectDto.startMonth, projectDto.startDay);
+                projectWithUsers.EndDate = new DateTime
+                    (projectDto.endYear, projectDto.endMonth, projectDto.endDay);
+
+                repository.Update(projectWithUsers);
             }
         }
 

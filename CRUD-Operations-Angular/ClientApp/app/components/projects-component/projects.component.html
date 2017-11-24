@@ -22,12 +22,12 @@
                     <td class="text-center">{{project.startDay}}:{{project.startMonth}}:{{project.startYear}}</td>
                     <td class="text-center">{{project.endDay}}:{{project.endMonth}}:{{project.endYear}}</td>
                     <td class="text-center">
-                        <a href="" class="btn btn-warning">Edit</a>
-                        <a href="" class="btn btn-danger">Delete</a>
+                        <a (click)="editProj(project.id)" class="btn btn-warning">Edit</a>
+                        <a (click)="deleteProj(project.id)" class="btn btn-danger">Delete</a>
                         <a (click)="redirectToManageUsers(project.id)" class="btn btn-primary">Manage users</a>
                     </td>
                     <td class="text-center">
-                        <a href="" class="btn btn-info">Show users</a>
+                        <a (click)="redirectToShowUsers(project.id)" class="btn btn-info">Show users</a>
                     </td>
                 </tr>
             </tbody>

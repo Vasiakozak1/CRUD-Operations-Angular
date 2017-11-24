@@ -1,0 +1,43 @@
+<div *ngIf="Ready">
+
+        <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-5">
+        
+        
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <h2 class="text-center">Update user</h2>
+                        </div>
+                        <div class="panel-body">
+                            <form #userForm="ngForm" (ngSubmit)="updateUser(userForm)">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <label for="firstName">First name</label>
+                                        <input type="text" name="firstName" ngModel class="form-control" [(ngModel)]="User.firstName">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <label for="lastName">Last name</label>
+                                        <input type="text" name="lastName" ngModel class="form-control" [(ngModel)]="User.lastName">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <label for="age">Age</label>
+                                        <input type="text" name="age" ngModel class="form-control" [(ngModel)]="User.age">
+                                    </div>
+                                    
+                                </div>
+                               
+                                <div class="form-group">
+                                    <input type="submit" class="form-control">
+                                </div>
+                            </form>
+                        </div>
+        
+                    </div>
+                </div>
+            </div>
+</div>

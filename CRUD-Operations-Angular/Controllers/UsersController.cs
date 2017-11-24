@@ -56,15 +56,54 @@ namespace CRUD_Operations_Angular.Web.Controllers
             using (ApplicationDbContext context = new ApplicationDbContext())
             {
                 IRepository<User> repository = new Repository<User>(context);
-                User user = repository.Get(id);
+                List<UsersProjectsViewModel> usersProjectsList = new List<UsersProjectsViewModel>();                
+                User user = repository.Get(id, u => u.Projects);
+                foreach (UsersProjects element in user.Projects)
+                {
+                    usersProjectsList.Add(new UsersProjectsViewModel()
+                    {
+                        ProjectId = element.ProjectId,
+                        UserId = element.UserId
+                    });
+                }
                 userDto = new UserViewModel()
                 {
+                    Id = user.Id,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                    Age = user.Age
+                    Age = user.Age,
+                    Projects = usersProjectsList
                 };
             }
             return userDto;
+        }
+
+
+        [HttpPost]
+        [Route("getusersbyids")]
+        public IEnumerable<UserViewModel> GetUsersByIds([FromBody]IEnumerable<int> ids)
+        {
+            IList<UserViewModel> resultUsersList = new List<UserViewModel>();
+            IList<int> listOfIds = ids.ToList();
+            using (ApplicationDbContext context = new ApplicationDbContext())
+            {
+                IRepository<User> repository = new Repository<User>(context);
+                var users = repository.GetAll();
+                foreach (var user in users)
+                {
+                    if (listOfIds.Contains(user.Id))
+                    {
+                        resultUsersList.Add(new UserViewModel()
+                        {
+                            Id = user.Id,
+                            FirstName = user.FirstName,
+                            LastName = user.LastName,
+                            Age = user.Age
+                        });
+                    }
+                }
+            }
+            return resultUsersList;
         }
 
         [HttpPost]
@@ -86,18 +125,16 @@ namespace CRUD_Operations_Angular.Web.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        public void Update(UserViewModel userDto)
+        public void Update([FromBody]UserViewModel user)
         {
             using (ApplicationDbContext context = new ApplicationDbContext())
             {
                 IRepository<User> repository = new Repository<User>(context);
-                User user = new User()
-                {
-                    FirstName = userDto.FirstName,
-                    LastName = userDto.LastName,
-                    Age = userDto.Age
-                };
-                repository.Update(user);
+                User userWithProjects = repository.Get(user.Id, u => u.Projects);
+                userWithProjects.Age = user.Age;
+                userWithProjects.FirstName = user.FirstName;
+                userWithProjects.LastName = user.LastName;
+                repository.Update(userWithProjects);
             }
         }
 

@@ -21,12 +21,12 @@
                     <td class="text-center">{{user.lastName}}</td>
                     <td class="text-center">{{user.age}}</td>
                     <td class="text-center">
-                        <a href="" class="btn btn-warning">Edit</a>
-                        <a href="" class="btn btn-danger">Delete</a>
-                        <a href="" class="btn btn-primary">Manage projects</a>
+                        <a (click)="updateUser(user.id)" class="btn btn-warning">Edit</a>
+                        <a (click)="deleteUser(user.id)" class="btn btn-danger">Delete</a>
+                        <a (click)="redirectToManageProjects(user.id)" class="btn btn-primary">Manage projects</a>
                     </td>
                     <td class="text-center">
-                        <a href="" class="btn btn-info">Show projects</a>
+                        <a (click)="redirectToUserProjects(user.id)" class="btn btn-info">Show projects</a>
                     </td>
                 </tr>
             </tbody>

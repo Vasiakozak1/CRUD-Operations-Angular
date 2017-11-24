@@ -27,8 +27,9 @@ export class CreateEntitiesComponent
         let endMonth: number = projForm.value.projEndMonth;
         let endYear: number = projForm.value.projEndYear;
 
-        let proj: ProjectViewModel = new ProjectViewModel();
-        proj.name = name; proj.description = description;
+        let proj: ProjectViewModel = ProjectViewModel
+            .GetProject(name, description, startDay, 
+            startMonth, startYear, endDay, endMonth, endYear);
         this.ProjService.Create(proj);
     }
     public createUser(userForm: NgForm)

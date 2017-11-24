@@ -14,6 +14,21 @@ export class ProjectViewModel
     public endYear: number;
     public users: UsersProjectsViewModel[];
 
+    public static GetProject(name: string, description: string, startDay: number, startMonth: number,
+        startYear: number, endDay: number, endMonth: number, endYear: number): ProjectViewModel
+        {
+            let result: ProjectViewModel = new ProjectViewModel();
+            result.name = name;
+            result.description = description;
+            result.startDay = startDay;
+            result.startMonth = startMonth;
+            result.startYear = startYear;
+            result.endDay = endDay;
+            result.endMonth = endMonth;
+            result.endYear = endYear;
+            return result;
+        }
+
     public constructor(){}
     // public constructor(name: string, description: string,
     //     startDay: number, startMonth: number, startYear: number,

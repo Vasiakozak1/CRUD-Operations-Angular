@@ -27,6 +27,18 @@ export class ProjectsService
             .then(response => response.json() as ProjectViewModel);
     }
 
+    public GetProjectsByIds(projectsIds: Array<number>): Promise<ProjectViewModel[]>
+    {
+        let queryUrl: string = "api/Projects/getbyids";
+
+        let header = new Headers({'Content-Type':'application/json'});
+        let option = new RequestOptions({headers: header});
+
+        return this.http.post(queryUrl, projectsIds, option)
+            .toPromise()
+            .then(response => response.json() as ProjectViewModel[]);
+    }
+
     public Create(project: ProjectViewModel): void
     {
         let requestUrl: string ="api/Projects/Create";
@@ -35,13 +47,19 @@ export class ProjectsService
         this.http.post(requestUrl,project,option)
             .toPromise();
     }
-    public Update(project: ProjectViewModel): void
+    public Update(project: ProjectViewModel): Promise<any>
     {
         let requestUrl: string ="api/Projects/Update";
         let header = new Headers({'Content-Type':'application/json'});
         let option = new RequestOptions({headers: header});
-        this.http.post(requestUrl, project, option)
+        return this.http.post(requestUrl, project, option)
             .toPromise();
+    }
+    public Delete(id: number)
+    {
+        let requestUrl: string ="api/Projects/Delete/" + id;  
+        this.http.delete(requestUrl)
+            .toPromise();      
     }
 
     public AttachUser(projectId: number, userId: number)

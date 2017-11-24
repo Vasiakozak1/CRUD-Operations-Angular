@@ -24,4 +24,18 @@ export class ProjectsComponent implements OnInit
     {
         this.Router.navigate(['/manageUsers'], {queryParams: {projId: id}});
     }
+    redirectToShowUsers(id: number)
+    {
+        this.Router.navigate(['/projectUsers'],{queryParams: {projId: id}});
+    }
+    deleteProj(id: number)
+    {
+        let projIndex = this.Projects.findIndex(proj => proj.id == id);
+        this.Projects.splice(projIndex, 1);
+        this.ProjectService.Delete(id);
+    }
+    editProj(id: number)
+    {
+        this.Router.navigate(['/editProj'],{queryParams: {projId: id}});
+    }
 }

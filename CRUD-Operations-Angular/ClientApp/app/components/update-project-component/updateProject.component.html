@@ -1,0 +1,62 @@
+<div *ngIf="Ready">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-5">
+
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <h2 class="text-center">Update project</h2>
+                </div>
+                <div class="panel-body">
+                    <form #projForm="ngForm" (ngSubmit)="updateProject(projForm)">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label for="projName">Name</label>
+                                <input type="text" name="projName" ngModel class="form-control" [(ngModel)]="Project.name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label for="projDescription">Description</label>
+                                <input type="text" name="projDescription" ngModel class="form-control" [(ngModel)]="Project.description">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label for="projStartDay">Start day</label>
+                                <input type="text" name="projStartDay" ngModel class="form-control" [(ngModel)]="Project.startDay">
+                            </div>
+                            <div class="input-group">
+                                <label for="projStartMonth">Start month</label>
+                                <input type="text" name="projStartMonth" ngModel class="form-control" [(ngModel)]="Project.startMonth">
+                            </div>
+                            <div class="input-group">
+                                <label for="projStartYear">Start year</label>
+                                <input type="text" name="projStartYear" ngModel class="form-control" [(ngModel)]="Project.startYear">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label for="projEndDay">End day</label>
+                                <input type="text" name="projEndDay" ngModel class="form-control" [(ngModel)]="Project.endDay">
+                            </div>
+                            <div class="input-group">
+                                <label for="projEndDay">End month</label>
+                                <input type="text" name="projEndMonth" ngModel class="form-control" [(ngModel)]="Project.endMonth">
+                            </div>
+                            <div class="input-group">
+                                <label for="projEndYear">End year</label>
+                                <input type="text" name="projEndYear" ngModel class="form-control" [(ngModel)]="Project.endYear">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" class="form-control">
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
