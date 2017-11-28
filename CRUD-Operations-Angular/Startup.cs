@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CRUD_Operations_Angular.DataAccess.Context;
+using CRUD_Operations_Angular.DataAccess.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
@@ -23,6 +25,8 @@ namespace CRUD_Operations_Angular
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddDbContext<ApplicationDbContext>();
+            services.AddSingleton<IUOWFactory, UOWFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,8 +45,10 @@ namespace CRUD_Operations_Angular
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseStaticFiles();
+            
 
+            app.UseStaticFiles();
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

@@ -14,14 +14,21 @@ namespace CRUD_Operations_Angular.Web.Controllers
     [Route("api/Projects")]
     public class ProjectsController : Controller
     {
+        private IUOWFactory _uowFactory;
+
+        public ProjectsController(IUOWFactory factory)
+        {
+            this._uowFactory = factory;
+        }
+
         [HttpGet]
         [Route("Get")]
         public IEnumerable<ProjectViewModel> GetAll()
         {
             List<ProjectViewModel> projectsDtos = new List<ProjectViewModel>();
-            using (ApplicationDbContext context = new ApplicationDbContext())
+            using (var uow = _uowFactory.CreateUnitOfWork())
             {
-                IRepository<Project> repository = new Repository<Project>(context);
+                IRepository<Project> repository = uow.CreateRepository<Project>();
                 var projects = repository.GetAll();
                 foreach (Project project in projects)
                 {
@@ -61,9 +68,9 @@ namespace CRUD_Operations_Angular.Web.Controllers
         public ProjectViewModel Get(int id)
         {
             ProjectViewModel projDTO = null;
-            using (ApplicationDbContext context = new ApplicationDbContext())
+            using (var uow = _uowFactory.CreateUnitOfWork())
             {
-                IRepository<Project> repository = new Repository<Project>(context);
+                IRepository<Project> repository = uow.CreateRepository<Project>();
                 Project project = repository.Get(id, proj => proj.Users);
                 if (project == null)
                     return null;
@@ -101,9 +108,9 @@ namespace CRUD_Operations_Angular.Web.Controllers
         public IEnumerable<ProjectViewModel> GetByIds([FromBody]IEnumerable<int> projectsIds)
         {
             List<ProjectViewModel> resultProjects = new List<ProjectViewModel>();
-            using (ApplicationDbContext context = new ApplicationDbContext())
+            using (var uow = _uowFactory.CreateUnitOfWork())
             {
-                IRepository<Project> repository = new Repository<Project>(context);
+                IRepository<Project> repository = uow.CreateRepository<Project>();
                 var projects = repository.GetAll();
                 foreach (Project tempProject in projects)
                 {
@@ -130,9 +137,9 @@ namespace CRUD_Operations_Angular.Web.Controllers
         [Route("[action]")]
         public void Create([FromBody]ProjectViewModel projectDto)
         {
-            using (ApplicationDbContext context = new ApplicationDbContext())
+            using (var uow = _uowFactory.CreateUnitOfWork()) 
             {
-                IRepository<Project> repository = new Repository<Project>(context);
+                IRepository<Project> repository = uow.CreateRepository<Project>();
                 Project project = new Project()
                 {
                     Name = projectDto.name,
@@ -149,9 +156,9 @@ namespace CRUD_Operations_Angular.Web.Controllers
         [Route("[action]")]
         public void Update([FromBody]ProjectViewModel projectDto)
         {
-            using (ApplicationDbContext context = new ApplicationDbContext())
+            using (var uow = _uowFactory.CreateUnitOfWork())
             {
-                IRepository<Project> repository = new Repository<Project>(context);
+                IRepository<Project> repository = uow.CreateRepository<Project>();
                 Project projectWithUsers = repository.Get(projectDto.id, proj => proj.Users);
 
                 projectWithUsers.Name = projectDto.name;
@@ -169,10 +176,10 @@ namespace CRUD_Operations_Angular.Web.Controllers
         [Route("[action]")]
         public void AttachUser([FromBody] AttachUsersViewModel model)
         {
-            using (ApplicationDbContext context = new ApplicationDbContext())
+            using (var uow = _uowFactory.CreateUnitOfWork()) 
             {
-                IRepository<User> userRepository = new Repository<User>(context);
-                IRepository<Project> projectRepository = new Repository<Project>(context);
+                IRepository<User> userRepository = uow.CreateRepository<User>();
+                IRepository<Project> projectRepository = uow.CreateRepository<Project>();
                 User user = userRepository.Get(model.userId);
                 Project project = projectRepository.Get(model.projId);
                 project.Users.Add(new UsersProjects()
@@ -191,9 +198,9 @@ namespace CRUD_Operations_Angular.Web.Controllers
         [Route("[action]")]
         public void DetachUser([FromBody] AttachUsersViewModel model)
         {
-            using (ApplicationDbContext context = new ApplicationDbContext())
+            using (var uow = _uowFactory.CreateUnitOfWork()) 
             {
-                IRepository<Project> projectRepository = new Repository<Project>(context);
+                IRepository<Project> projectRepository = uow.CreateRepository<Project>();
                 Project project = projectRepository.Get(model.projId, proj => proj.Users);
                 foreach (UsersProjects usersProject in project.Users)
                 {
@@ -212,9 +219,9 @@ namespace CRUD_Operations_Angular.Web.Controllers
         [Route("[action]/{id}")]
         public void Delete(int id)
         {
-            using (ApplicationDbContext context = new ApplicationDbContext())
+            using (var uow = _uowFactory.CreateUnitOfWork()) 
             {
-                IRepository<Project> repository = new Repository<Project>(context);
+                IRepository<Project> repository = uow.CreateRepository<Project>();
                 repository.Delete(id);
             }
         }

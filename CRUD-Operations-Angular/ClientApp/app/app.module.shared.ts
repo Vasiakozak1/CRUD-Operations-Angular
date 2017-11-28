@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpModule, XHRBackend, RequestOptions } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { ProjectsService } from "../app/components/services/projects.service";
 import { UsersService } from "../app/components/services/users.service";
@@ -17,6 +17,8 @@ import { UpdateProjectComponent } from "../app/components/update-project-compone
 import { ManageUserProjectsComponent } from "../app/components/manage-user-projects.component/manageUserProjects.component";
 import { UpdateUserComponent } from "../app/components/update-user-component/updateUser.component";
 import { UserProjectsComponent } from "../app/components/userProjects-component/userProjects.component";
+import { NotificationService } from "./components/services/notification.service";
+import { HttpInterceptor } from "../app/components/http.interceptor";
 
 @NgModule({
     declarations: [
@@ -37,6 +39,7 @@ import { UserProjectsComponent } from "../app/components/userProjects-component/
         CommonModule,
         HttpModule,
         FormsModule,
+        ReactiveFormsModule,
         RouterModule.forRoot([
             {path: '', redirectTo: 'projects', pathMatch: 'full' },
             {path: 'projects', component: ProjectsComponent},
@@ -52,8 +55,18 @@ import { UserProjectsComponent } from "../app/components/userProjects-component/
     ],
     providers:
     [
+        NotificationService,
         ProjectsService,
-        UsersService
+        UsersService,      
+        {
+            provide: HttpInterceptor,
+            useFactory:
+                (backend: XHRBackend, defaultOptions: RequestOptions, notifyService: NotificationService) =>
+                {
+                    return new HttpInterceptor(backend,defaultOptions, notifyService);
+                },
+                deps: [XHRBackend, RequestOptions, NotificationService]
+        }
     ]
 })
 export class AppModuleShared {

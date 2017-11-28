@@ -14,7 +14,8 @@ export class UsersComponent implements OnInit
     ngOnInit()
     {
         this.UserService.GetAllUsers()
-            .then(result => this.Users = result as UserViewModel[]);
+            .then(result => this.Users = result as UserViewModel[])
+            .then(() => this.UserService.TestError());
     }
     redirectToManageProjects(userId: number)
     {

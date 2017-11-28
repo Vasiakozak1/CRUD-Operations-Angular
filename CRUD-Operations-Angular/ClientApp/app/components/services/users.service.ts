@@ -1,13 +1,13 @@
 import { Injectable } from "@angular/core";
 import { Http, Headers, RequestOptions, Response } from "@angular/http";
 import "rxjs/add/operator/toPromise";
-
+import { HttpInterceptor } from "../http.interceptor";
 import { UserViewModel } from "../models/userViewModel";
 
 @Injectable()
 export class UsersService
 {
-    public constructor(private http: Http){}
+    public constructor(private http: HttpInterceptor){}
 
     public GetAllUsers(): Promise<UserViewModel[]>
     {
@@ -61,5 +61,14 @@ export class UsersService
 
         this.http.delete(queryUrl)
             .toPromise();
+    }
+
+    public TestError(): Promise<Response>
+    {
+        let queryUrl: string ="api/Users/GetError";
+
+        return this.http.get(queryUrl)
+            .toPromise()
+            .then(response => response);
     }
 }

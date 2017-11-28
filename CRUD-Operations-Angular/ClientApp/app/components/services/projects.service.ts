@@ -3,12 +3,12 @@ import { Http, Headers, Response, RequestOptions } from "@angular/http";
 import "rxjs/add/operator/toPromise";
 import { ProjectViewModel } from "../models/projectViewModel";
 import { UsersProjectsViewModel } from "../models/usersProjectsViewModel";
+import { HttpInterceptor } from "../http.interceptor";
 @Injectable()
 export class ProjectsService
 {
     public constructor(private http: Http)
-    {       
-    }
+    {}
     public GetAllProjects(): Promise<ProjectViewModel[]>
     {
         let requestUrl: string ="api/Projects/Get";

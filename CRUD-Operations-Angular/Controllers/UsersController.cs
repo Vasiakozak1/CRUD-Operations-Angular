@@ -14,14 +14,21 @@ namespace CRUD_Operations_Angular.Web.Controllers
     [Route("api/Users")]
     public class UsersController : Controller
     {
+        private IUOWFactory _factory;
+
+        public UsersController(IUOWFactory factory)
+        {
+            this._factory = factory;
+        }
+
         [HttpGet]
         [Route("Get")]
         public IEnumerable<UserViewModel> GetAll()
         {
             List<UserViewModel> userDtos = new List<UserViewModel>();
-            using (ApplicationDbContext context = new ApplicationDbContext())
+            using (var uow = _factory.CreateUnitOfWork())
             {
-                IRepository<User> repository = new Repository<User>(context);
+                IRepository<User> repository = uow.CreateRepository<User>();
                 var users = repository.GetAll();
                 foreach (User user in users)
                 {
@@ -49,13 +56,20 @@ namespace CRUD_Operations_Angular.Web.Controllers
         }
 
         [HttpGet]
+        [Route("GetError")]
+        public IActionResult GetTestError()
+        {
+            return BadRequest(StatusCode(401, "very bad response"));
+        }
+
+        [HttpGet]
         [Route("[action]/{id}")]
         public UserViewModel Get(int id)
         {
             UserViewModel userDto = null;
-            using (ApplicationDbContext context = new ApplicationDbContext())
+            using (var uow = _factory.CreateUnitOfWork())
             {
-                IRepository<User> repository = new Repository<User>(context);
+                IRepository<User> repository = uow.CreateRepository<User>();
                 List<UsersProjectsViewModel> usersProjectsList = new List<UsersProjectsViewModel>();                
                 User user = repository.Get(id, u => u.Projects);
                 foreach (UsersProjects element in user.Projects)
@@ -85,9 +99,9 @@ namespace CRUD_Operations_Angular.Web.Controllers
         {
             IList<UserViewModel> resultUsersList = new List<UserViewModel>();
             IList<int> listOfIds = ids.ToList();
-            using (ApplicationDbContext context = new ApplicationDbContext())
+            using (var uow = _factory.CreateUnitOfWork())
             {
-                IRepository<User> repository = new Repository<User>(context);
+                IRepository<User> repository = uow.CreateRepository<User>();
                 var users = repository.GetAll();
                 foreach (var user in users)
                 {
@@ -110,9 +124,9 @@ namespace CRUD_Operations_Angular.Web.Controllers
         [Route("[action]")]
         public void Create([FromBody]UserViewModel userDto)
         {
-            using (ApplicationDbContext context = new ApplicationDbContext())
+            using (var uow = _factory.CreateUnitOfWork())
             {
-                IRepository<User> repository = new Repository<User>(context);
+                IRepository<User> repository = uow.CreateRepository<User>();
                 User user = new User()
                 {
                     FirstName = userDto.FirstName,
@@ -127,9 +141,9 @@ namespace CRUD_Operations_Angular.Web.Controllers
         [Route("[action]")]
         public void Update([FromBody]UserViewModel user)
         {
-            using (ApplicationDbContext context = new ApplicationDbContext())
+            using (var uow = _factory.CreateUnitOfWork()) 
             {
-                IRepository<User> repository = new Repository<User>(context);
+                IRepository<User> repository = uow.CreateRepository<User>();
                 User userWithProjects = repository.Get(user.Id, u => u.Projects);
                 userWithProjects.Age = user.Age;
                 userWithProjects.FirstName = user.FirstName;
@@ -142,9 +156,9 @@ namespace CRUD_Operations_Angular.Web.Controllers
         [Route("[action]/{id}")]
         public void Delete(int id)
         {
-            using (ApplicationDbContext context = new ApplicationDbContext())
+            using (var uow = _factory.CreateUnitOfWork()) 
             {
-                IRepository<User> repository = new Repository<User>(context);
+                IRepository<User> repository = uow.CreateRepository<User>();
                 repository.Delete(id);
             }
         }

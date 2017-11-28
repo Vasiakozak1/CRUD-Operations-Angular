@@ -1,52 +1,92 @@
-<div class="panel">
-    <div class="panel-heading">
+<div class="card card-block">
+    <div class="card-title">
         <div class="text-center">Create project</div>
     </div>
-    <div class="panel-body">
+    <div >
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-5">
-                <form #projForm="ngForm" (ngSubmit)="createProject(projForm)" novalidate>
-                    <div class="form-group">
-                        <label for="projName">Name</label>
-                        <input type="text" name="projName" ngModel class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="projDescription">Description</label>
-                        <input type="text" name="projDescription" ngModel class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-4">
-                            <label for="projStartDay">Start day</label>
-                            <input type="text" name="projStartDay" ngModel class="form-control">
+                <form [formGroup]="projectForm" (ngSubmit)="createProject(projectForm)" novalidate>
+                    <div class="form-group" [ngClass]="{ 'has-error': !projectForm.controls['name'].valid && projectForm.controls['name'].touched}">
+                        <label for="name">Name</label>
+                        <input type="text" name="name" class="form-control" formControlName="name" >
+                        <div *ngIf="projectForm.controls['name'].hasError('required') && projectForm.controls['name'].touched">
+                            <div class="alert alert-danger">This field is required</div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="projStartMonth">Start month</label>
-                            <input type="text" name="projStartMonth" ngModel class="form-control">
+                        <div *ngIf="projectForm.controls['name'].hasError('minlength') && projectForm.controls['name'].touched">
+                            <div class="alert alert-danger">Minimum length of name is 3 characters</div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="projStartYear">Start year</label>
-                            <input type="text" name="projStartYear" ngModel class="form-control">
+                        <div *ngIf="projectForm.controls['name'].hasError('maxlength') && projectForm.controls['name'].touched">
+                            <div class="alert alert-danger">Maximum length of name is 25 characters</div>
+                        </div>
+                        <div *ngIf="projectForm.controls['name'].hasError('pattern') && projectForm.controls['name'].touched">
+                            <div class="alert alert-danger">Invalid format</div>
                         </div>
                     </div>
+                    <div class="form-group" [ngClass]="{ 'has-error': !projectForm.controls['description'].valid && projectForm.controls['description'].touched}">
+                        <label for="description">Description</label>
+                        <input type="text" name="description" class="form-control" formControlName="description">
+                            
+                        <div *ngIf="projectForm.controls['description'].hasError('required') && projectForm.controls['description'].touched">
+                            <div class="alert alert-danger">This field is required</div>
+                        </div>
+                        <div *ngIf="projectForm.controls['description'].hasError('minlength') && projectForm.controls['description'].touched">
+                            <div class="alert alert-danger">Minimum length of description is 5 characters</div>
+                        </div>
+                        <div *ngIf="projectForm.controls['description'].hasError('maxlength') && projectForm.controls['description'].touched">
+                            <div class="alert alert-danger">Maximum length of description is 40 characters</div>
+                        </div>
+                        <div *ngIf="projectForm.controls['description'].hasError('pattern') && projectForm.controls['description'].touched">
+                            <div class="alert alert-danger">Invalid format</div>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <div class="col-md-4">
-                            <label for="projEndDay">End day</label>
-                            <input type="text" name="projEndDay" ngModel class="form-control">
+                            <label for="startDay">Start day</label>
+                            <select name="startDay" formControlName="startDay" class="form-control" (change)="dateChanged($event)" >
+                                <option [value]="day" *ngFor="let day of days">{{day}}</option>
+                            </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="projEndMonth">End month</label>
-                            <input type="text" name="projEndMonth" ngModel class="form-control">
+                            <label for="startMonth">Start month</label>
+                            <select name="startMonth" formControlName="startMonth" class="form-control" (change)="dateChanged($event)" >
+                                <option [value]="month" *ngFor="let month of months">{{month}}</option>
+                            </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="projEndYear">End year</label>
-                            <input type="text" name="projEndYear" ngModel class="form-control">
+                            <label for="startYear">Start year</label>
+                            <select name="startYear" formControlName="startYear" class="form-control" (change)="dateChanged($event)" >
+                                <option [value]="year" *ngFor="let year of years">{{year}}</option>
+                            </select>
                         </div>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error': projectDateValid == -1}">
+                        <div class="col-md-4">
+                            <label for="endDay">End day</label>
+                            <select name="endDay" formControlName="endDay" class="form-control" (change)="dateChanged($event)" >
+                                    <option [value]="day" *ngFor="let day of days">{{day}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="endMonth">End month</label>
+                            <select name="endMonth" formControlName="endMonth" class="form-control" (change)="dateChanged($event)" >
+                                    <option [value]="month" *ngFor="let month of months">{{month}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="endYear">End year</label>
+                            <select name="endYear" formControlName="endYear" class="form-control" (change)="dateChanged($event)" >
+                                    <option [value]="year" *ngFor="let year of years">{{year}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-grup" *ngIf="projectDateValid == -1">
+                        <div class="alert alert-danger">Start date is later than end date</div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3"></div>
                         <div class="col-md-4">
-                            <input type="submit" class="form-control">
+                            <input type="submit" class="form-control" [disabled]="!projectForm.valid || projectDateValid != 1">
                         </div>
                     </div>
                 </form>
@@ -65,22 +105,54 @@
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-5">
-                <form #userForm="ngForm" (ngSubmit)="createUser(userForm)" novalidate>
-                    <div class="form-group">
+                <form role="form" novalidate [formGroup]="userForm" (ngSubmit)="createUser(userForm)">
+                    <div class="form-group" [ngClass]="{ 'has-error': !userForm.controls['firstName'].valid && userForm.controls['firstName'].touched}">
                         <label for="firstName">First name</label>
-                        <input type="text" name="firstName" ngModel class="form-control">
+                        <input type="text" name="firstName" formControlName="firstName" class="form-control">
+                        <div *ngIf="userForm.controls['firstName'].hasError('required') && userForm.controls['firstName'].touched">
+                            <div class="alert alert-danger">This field is required</div>
+                        </div>
+                        <div *ngIf="userForm.controls['firstName'].hasError('minlength') && userForm.controls['firstName'].touched">
+                            <div class="alert alert-danger">First name minimum length is 3 characters</div>
+                        </div>
+                        <div *ngIf="userForm.controls['firstName'].hasError('maxlength') && userForm.controls['firstName'].touched">
+                            <div class="alert alert-danger">First name maximum length is 15 characters</div>
+                        </div>
+                        <div *ngIf="userForm.controls['firstName'].hasError('pattern') && userForm.controls['firstName'].touched">
+                            <div class="alert alert-danger">Invalid format</div>
+                        </div>
+
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" [ngClass]="{ 'has-error': !userForm.controls['lastName'].valid && userForm.controls['lastName'].touched}">
                         <label for="lastName">Last name</label>
-                        <input type="text" name="lastName" ngModel class="form-control">
+                        <input type="text" name="lastName" class="form-control" formControlName="lastName">
+                            
+                        <div *ngIf="userForm.controls['lastName'].hasError('required') && userForm.controls['lastName'].touched">
+                            <div class="alert alert-danger">This field is required</div>
+                        </div>
+                        <div *ngIf="userForm.controls['lastName'].hasError('minlength') && userForm.controls['lastName'].touched">
+                            <div class="alert alert-danger">Last name minimum length is 3 characters</div>
+                        </div>
+                        <div *ngIf="userForm.controls['lastName'].hasError('maxlength') && userForm.controls['lastName'].touched">
+                            <div class="alert alert-danger">Last name maximum length is 20 characters</div>
+                        </div>
+                        <div *ngIf="userForm.controls['lastName'].hasError('pattern') && userForm.controls['lastName'].touched">
+                            <div class="alert alert-danger">Invalid format</div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <div class="input-group">
                             <label for="age">Age</label>
-                            <input type="text" name="age" ngModel class="form-control">                           
+                            <select class="form-control" name="age" formControlName="age">
+                                <option [value]="age" *ngFor="let age of ages">{{age}}</option>
+
+                            </select>
+                            <div *ngIf="userForm.controls['age'].hasError('required') && userForm.controls['age'].touched">
+                                <div class="alert alert-danger">This field is required</div>
+                            </div>
                         </div>
                         <div class="input-group">
-                                <input type="submit" class="form-control">                                
+                            <input type="submit" class="btn btn-default" [disabled]="!userForm.valid" value="Create">
                         </div>
                     </div>
                 </form>

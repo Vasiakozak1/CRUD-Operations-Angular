@@ -17,8 +17,7 @@ export class ProjectsComponent implements OnInit
     ngOnInit()
     {
         this.ProjectService.GetAllProjects()
-            .then(result => this.Projects = result as ProjectViewModel[]);
-            
+            .then(result => this.Projects = result as ProjectViewModel[]);         
     }
     redirectToManageUsers(id: number)
     {

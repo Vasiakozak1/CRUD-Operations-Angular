@@ -4,3 +4,10 @@
         padding-top: 50px;
     }
 }
+#errorMessage{
+    
+    height: 40%;
+    margin: 0px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
