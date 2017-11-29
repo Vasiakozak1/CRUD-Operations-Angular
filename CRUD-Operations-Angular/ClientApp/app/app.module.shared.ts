@@ -19,6 +19,9 @@ import { UpdateUserComponent } from "../app/components/update-user-component/upd
 import { UserProjectsComponent } from "../app/components/userProjects-component/userProjects.component";
 import { NotificationService } from "./components/services/notification.service";
 import { HttpInterceptor } from "../app/components/http.interceptor";
+import { StudentFormComponent } from "../app/components/students/student-form-component/studentForm.component";
+import { StudentsListComponent } from "../app/components/students/students-list-component/studentsList.component";
+import { StudentComponent } from "../app/components/students/student-component/student.component";
 
 @NgModule({
     declarations: [
@@ -33,7 +36,10 @@ import { HttpInterceptor } from "../app/components/http.interceptor";
         UpdateProjectComponent,
         ManageProjectUsersComponent,
         ManageUserProjectsComponent,
-        UpdateUserComponent   
+        UpdateUserComponent,
+        StudentFormComponent,
+        StudentComponent,
+        StudentsListComponent   
     ],
     imports: [
         CommonModule,
@@ -50,7 +56,8 @@ import { HttpInterceptor } from "../app/components/http.interceptor";
             {path: 'editProj',component: UpdateProjectComponent},
             {path: 'manageProjects',component: ManageUserProjectsComponent},
             {path: 'editUser',component: UpdateUserComponent},
-            {path: 'userProjects', component: UserProjectsComponent}
+            {path: 'userProjects', component: UserProjectsComponent},
+            {path: 'students', component: StudentsListComponent}
         ])
     ],
     providers:

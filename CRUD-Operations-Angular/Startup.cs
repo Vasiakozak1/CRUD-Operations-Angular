@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CRUD_Operations_Angular.DataAccess.Context;
+using CRUD_Operations_Angular.DataAccess.Entities;
 using CRUD_Operations_Angular.DataAccess.Repository;
+using CRUD_Operations_Angular.DataAccess.Services;
+using CRUD_Operations_Angular.DataAccess.ViewModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
@@ -27,6 +30,8 @@ namespace CRUD_Operations_Angular
             services.AddMvc();
             services.AddDbContext<ApplicationDbContext>();
             services.AddSingleton<IUOWFactory, UOWFactory>();
+            services.AddTransient<IService<Project, ProjectViewModel>, Service<Project, ProjectViewModel>>();
+            services.AddTransient<IService<User, UserViewModel>, Service<User, UserViewModel>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

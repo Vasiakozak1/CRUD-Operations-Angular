@@ -1,15 +1,13 @@
-<div class="card card-block">
-    <div class="card-title">
-        <div class="text-center">Create project</div>
-    </div>
-    <div >
-        <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-5">
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-5">
+        <div class="card">
+            <h4 class="card-title text-center">Create project</h4>
+            <div class="card-block">
                 <form [formGroup]="projectForm" (ngSubmit)="createProject(projectForm)" novalidate>
                     <div class="form-group" [ngClass]="{ 'has-error': !projectForm.controls['name'].valid && projectForm.controls['name'].touched}">
-                        <label for="name">Name</label>
-                        <input type="text" name="name" class="form-control" formControlName="name" >
+                        <label for="name" class="card-text">Name</label>
+                        <input type="text" name="name" class="form-control" formControlName="name">
                         <div *ngIf="projectForm.controls['name'].hasError('required') && projectForm.controls['name'].touched">
                             <div class="alert alert-danger">This field is required</div>
                         </div>
@@ -24,9 +22,9 @@
                         </div>
                     </div>
                     <div class="form-group" [ngClass]="{ 'has-error': !projectForm.controls['description'].valid && projectForm.controls['description'].touched}">
-                        <label for="description">Description</label>
+                        <label for="description" class="card-text">Description</label>
                         <input type="text" name="description" class="form-control" formControlName="description">
-                            
+
                         <div *ngIf="projectForm.controls['description'].hasError('required') && projectForm.controls['description'].touched">
                             <div class="alert alert-danger">This field is required</div>
                         </div>
@@ -42,41 +40,41 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-4">
-                            <label for="startDay">Start day</label>
-                            <select name="startDay" formControlName="startDay" class="form-control" (change)="dateChanged($event)" >
+                            <label for="startDay" class="catd-text">Start day</label>
+                            <select name="startDay" formControlName="startDay" class="form-control" (change)="dateChanged($event)">
                                 <option [value]="day" *ngFor="let day of days">{{day}}</option>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="startMonth">Start month</label>
-                            <select name="startMonth" formControlName="startMonth" class="form-control" (change)="dateChanged($event)" >
+                            <label for="startMonth" class="catd-text">Start month</label>
+                            <select name="startMonth" formControlName="startMonth" class="form-control" (change)="dateChanged($event)">
                                 <option [value]="month" *ngFor="let month of months">{{month}}</option>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="startYear">Start year</label>
-                            <select name="startYear" formControlName="startYear" class="form-control" (change)="dateChanged($event)" >
+                            <label for="startYear" class="catd-text">Start year</label>
+                            <select name="startYear" formControlName="startYear" class="form-control" (change)="dateChanged($event)">
                                 <option [value]="year" *ngFor="let year of years">{{year}}</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group" [ngClass]="{'has-error': projectDateValid == -1}">
                         <div class="col-md-4">
-                            <label for="endDay">End day</label>
-                            <select name="endDay" formControlName="endDay" class="form-control" (change)="dateChanged($event)" >
-                                    <option [value]="day" *ngFor="let day of days">{{day}}</option>
+                            <label for="endDay" class="catd-text">End day</label>
+                            <select name="endDay" formControlName="endDay" class="form-control" (change)="dateChanged($event)">
+                                <option [value]="day" *ngFor="let day of days">{{day}}</option>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="endMonth">End month</label>
-                            <select name="endMonth" formControlName="endMonth" class="form-control" (change)="dateChanged($event)" >
-                                    <option [value]="month" *ngFor="let month of months">{{month}}</option>
+                            <label for="endMonth" class="catd-text">End month</label>
+                            <select name="endMonth" formControlName="endMonth" class="form-control" (change)="dateChanged($event)">
+                                <option [value]="month" *ngFor="let month of months">{{month}}</option>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="endYear">End year</label>
-                            <select name="endYear" formControlName="endYear" class="form-control" (change)="dateChanged($event)" >
-                                    <option [value]="year" *ngFor="let year of years">{{year}}</option>
+                            <label for="endYear" class="catd-text">End year</label>
+                            <select name="endYear" formControlName="endYear" class="form-control" (change)="dateChanged($event)">
+                                <option [value]="year" *ngFor="let year of years">{{year}}</option>
                             </select>
                         </div>
                     </div>
@@ -94,14 +92,15 @@
         </div>
     </div>
 </div>
-
 <br/>
-
-<div class="panel">
-    <div class="panel-heading">
-        <div class="text-center">Create user</div>
+<div class="row">
+<div class="col-md-4"></div>
+<div class="col-md-5">
+<div class="card">
+    <div class="card-title">
+        <h4 class="text-center">Create user</h4>
     </div>
-    <div class="panel-body">
+    <div class="panel-block">
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-5">
@@ -126,7 +125,7 @@
                     <div class="form-group" [ngClass]="{ 'has-error': !userForm.controls['lastName'].valid && userForm.controls['lastName'].touched}">
                         <label for="lastName">Last name</label>
                         <input type="text" name="lastName" class="form-control" formControlName="lastName">
-                            
+
                         <div *ngIf="userForm.controls['lastName'].hasError('required') && userForm.controls['lastName'].touched">
                             <div class="alert alert-danger">This field is required</div>
                         </div>
@@ -159,4 +158,6 @@
             </div>
         </div>
     </div>
+</div>
+</div>
 </div>

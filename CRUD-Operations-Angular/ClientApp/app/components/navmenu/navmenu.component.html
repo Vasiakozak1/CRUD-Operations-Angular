@@ -1,9 +1,13 @@
 <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse bg-faded">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
     <div class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item" [routerLinkActive]="['active']"><a [routerLink]="['projects']">Projects</a></li>
-            <li class="nav-item" [routerLinkActive]="['active']"><a [routerLink]="['users']">Users</a></li>            
-            <li class="nav-item" [routerLinkActive]="['active']"><a [routerLink]="['create']">Create</a></li>
+            <li class="nav-item" [routerLinkActive]="['active']"><a class="nav-link" [routerLink]="['projects']">Projects</a></li>
+            <li class="nav-item" [routerLinkActive]="['active']"><a class="nav-link" [routerLink]="['users']">Users</a></li>            
+            <li class="nav-item" [routerLinkActive]="['active']"><a class="nav-link" [routerLink]="['create']">Create</a></li>
+            <li class="nav-item" [routerLinkActive]="['active']"><a class="nav-link" [routerLink]="['students']">Students</a></li>
         </ul>
     </div>
 </nav>
