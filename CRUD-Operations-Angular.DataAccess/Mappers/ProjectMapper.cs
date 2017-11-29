@@ -33,21 +33,38 @@ namespace CRUD_Operations_Angular.DataAccess.Mappers
             {
                 throw new Exception();
             }
-            return new ProjectViewModel
+            
+            var result = new ProjectViewModel
+                {
+                    name = project.Name,
+                    description = project.Description,
+
+                    startDay = project.StartDate.Day,
+                    startMonth = project.StartDate.Month,
+                    startYear = project.StartDate.Year,
+
+                    endDay = project.EndDate.Day,
+                    endMonth = project.EndDate.Month,
+                    endYear = project.EndDate.Year
+                };
+            if (project.Users == null || project.Users.Count == 0)
             {
-                name = project.Name,
-                description = project.Description,
-
-                startDay = project.StartDate.Day,
-                startMonth = project.StartDate.Month,
-                startYear = project.StartDate.Year,
-
-                endDay = project.EndDate.Day,
-                endMonth = project.EndDate.Month,
-                endYear = project.EndDate.Year,
-                users = new List<UsersProjectsViewModel>()
-            };
-
+                result.users = new List<UsersProjectsViewModel>();
+            }
+            else
+            {
+                IList<UsersProjectsViewModel> usersProjectsList = new List<UsersProjectsViewModel>();
+                foreach (var userProject in project.Users)
+                {
+                    usersProjectsList.Add(new UsersProjectsViewModel
+                    {
+                        ProjectId = userProject.ProjectId,
+                        UserId = userProject.UserId
+                    });
+                }
+                result.users = usersProjectsList;
+            }
+            return result;
         }
     }
 }

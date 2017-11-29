@@ -14,6 +14,7 @@ namespace CRUD_Operations_Angular.DataAccess.Mappers
             {
                 throw new Exception();
             }
+
             return new User
             {
                 Id = userViewModel.Id,
@@ -31,14 +32,32 @@ namespace CRUD_Operations_Angular.DataAccess.Mappers
             {
                 throw new Exception();
             }
-            return new UserViewModel
+
+            var result = new UserViewModel
             {
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Age = user.Age,
-                Projects = new List<UsersProjectsViewModel>()
+                Age = user.Age
             };
+            if (user.Projects == null || user.Projects.Count == 0)
+            {
+                result.Projects = new List<UsersProjectsViewModel>();
+            }
+            else
+            {
+                IList<UsersProjectsViewModel> usersProjectsList = new List<UsersProjectsViewModel>();
+                foreach (var userProject in user.Projects)
+                {
+                    usersProjectsList.Add(new UsersProjectsViewModel
+                    {
+                        UserId = userProject.UserId,
+                        ProjectId = userProject.ProjectId
+                    });
+                }
+                result.Projects = usersProjectsList;
+            }
+            return result;
         }
     }
 }

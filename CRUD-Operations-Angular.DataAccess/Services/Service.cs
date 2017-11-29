@@ -18,12 +18,13 @@ namespace CRUD_Operations_Angular.DataAccess.Services
             this._uowFactory = factory;
         }
 
-        public void Create(TSource item)
+        public void Create(TTarget item)
         {
+            TSource entity = (TSource)_mapper.Map(item);
             using (var uow = _uowFactory.CreateUnitOfWork())
             {
                 IRepository<TSource> repository = uow.CreateRepository<TSource>();
-                repository.Create(item);
+                repository.Create(entity);
             }
         }
 
@@ -66,6 +67,7 @@ namespace CRUD_Operations_Angular.DataAccess.Services
                     throw new EntityNotFoundException();
                 }
                 viewModel = (TTarget)_mapper.Map(entity);
+                
             }           
             return viewModel;
         }

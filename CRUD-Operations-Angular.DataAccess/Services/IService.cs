@@ -10,7 +10,7 @@ namespace CRUD_Operations_Angular.DataAccess.Services
 {
     public interface IService<TSource, TTarget> where TSource: class, IEntity where TTarget: IViewModel
     {
-        void Create(TSource item);
+        void Create(TTarget item);
         TTarget Get(int id);
         TTarget Get<TProperty>(int id, Expression<Func<TSource, TProperty>> expression);
         IEnumerable<TTarget> GetByIds(IEnumerable<int> ids); 
