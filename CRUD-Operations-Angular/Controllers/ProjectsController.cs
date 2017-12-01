@@ -5,225 +5,66 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CRUD_Operations_Angular.DataAccess.Repository;
-using CRUD_Operations_Angular.Web.ViewModels;
+using CRUD_Operations_Angular.DataAccess.ViewModels;
 using CRUD_Operations_Angular.DataAccess.Context;
 using CRUD_Operations_Angular.DataAccess.Entities;
+using CRUD_Operations_Angular.DataAccess.Mappers;
+using CRUD_Operations_Angular.DataAccess.Services;
 namespace CRUD_Operations_Angular.Web.Controllers
 {
     [Produces("application/json")]
     [Route("api/Projects")]
     public class ProjectsController : Controller
     {
-        private IUOWFactory _uowFactory;
-
-        public ProjectsController(IUOWFactory factory)
+        private IService<Project, ProjectViewModel> _service;    
+        public ProjectsController(IService<Project,ProjectViewModel> service)
         {
-            this._uowFactory = factory;
+            this._service = service;
+            this._service.Mapper = new ProjectMapper();
         }
 
         [HttpGet]
         [Route("Get")]
         public IEnumerable<ProjectViewModel> GetAll()
         {
-            List<ProjectViewModel> projectsDtos = new List<ProjectViewModel>();
-            using (var uow = _uowFactory.CreateUnitOfWork())
-            {
-                IRepository<Project> repository = uow.CreateRepository<Project>();
-                var projects = repository.GetAll();
-                foreach (Project project in projects)
-                {
-                    List<UsersProjectsViewModel> usersProjectsForViewModel = new List<UsersProjectsViewModel>();
-                    foreach (var userProj in project.Users)
-                    {
-                        usersProjectsForViewModel.Add(new UsersProjectsViewModel()
-                        {
-                            ProjectId = userProj.ProjectId,
-                            UserId = userProj.UserId
-                        });
-                    }
-
-                    ProjectViewModel dto = new ProjectViewModel()
-                    {
-                        id = project.Id,
-                        name = project.Name,
-                        description = project.Description,
-                        
-                        startYear = project.StartDate.Year,
-                        startMonth = project.StartDate.Month,
-                        startDay = project.StartDate.Day,
-
-                        endYear = project.EndDate.Year,
-                        endMonth = project.EndDate.Month,
-                        endDay = project.EndDate.Day,
-                        users = usersProjectsForViewModel
-                    };
-                    projectsDtos.Add(dto);
-                }
-            }
-            return projectsDtos;
+            return _service.GetAll();
         }
 
         [HttpGet]
         [Route("[action]/{id}")]
         public ProjectViewModel Get(int id)
         {
-            ProjectViewModel projDTO = null;
-            using (var uow = _uowFactory.CreateUnitOfWork())
-            {
-                IRepository<Project> repository = uow.CreateRepository<Project>();
-                Project project = repository.Get(id, proj => proj.Users);
-                if (project == null)
-                    return null;
-
-                List<UsersProjectsViewModel> projectsUsers = new List<UsersProjectsViewModel>();
-                foreach (UsersProjects userProject in project.Users)
-                {
-                    projectsUsers.Add(new UsersProjectsViewModel()
-                    {
-                        UserId = userProject.UserId,
-                        ProjectId = userProject.ProjectId
-                    });
-                }
-                projDTO = new ProjectViewModel()
-                {
-                    id = project.Id,
-                    name = project.Name,
-                    description = project.Description,
-
-                    startYear = project.StartDate.Year,
-                    startMonth = project.StartDate.Month,
-                    startDay = project.StartDate.Day,
-
-                    endYear = project.EndDate.Year,
-                    endMonth = project.EndDate.Month,
-                    endDay = project.EndDate.Day,
-                    users = projectsUsers
-                };
-            }
-            return projDTO;
+            return _service.Get(id, proj => proj.Users);
         }
 
         [HttpPost]
         [Route("getbyids")]
         public IEnumerable<ProjectViewModel> GetByIds([FromBody]IEnumerable<int> projectsIds)
         {
-            List<ProjectViewModel> resultProjects = new List<ProjectViewModel>();
-            using (var uow = _uowFactory.CreateUnitOfWork())
-            {
-                IRepository<Project> repository = uow.CreateRepository<Project>();
-                var projects = repository.GetAll();
-                foreach (Project tempProject in projects)
-                {
-                    if (projectsIds.Contains(tempProject.Id))
-                    {
-                        resultProjects.Add(new ProjectViewModel
-                        {
-                            name = tempProject.Name,
-                            description = tempProject.Description,
-                            startDay = tempProject.StartDate.Day,
-                            startMonth = tempProject.StartDate.Month,
-                            startYear = tempProject.StartDate.Year,
-                            endDay = tempProject.EndDate.Day,
-                            endMonth = tempProject.EndDate.Month,
-                            endYear = tempProject.EndDate.Year
-                        });
-                    }
-                }
-            }
-            return resultProjects;
+            return _service.GetByIds(projectsIds);
         }
 
         [HttpPost]
         [Route("[action]")]
-        public void Create([FromBody]ProjectViewModel projectDto)
+        public void Create([FromBody]ProjectViewModel projectViewModel)
         {
-            using (var uow = _uowFactory.CreateUnitOfWork()) 
-            {
-                IRepository<Project> repository = uow.CreateRepository<Project>();
-                Project project = new Project()
-                {
-                    Name = projectDto.name,
-                    Description = projectDto.description,
-                    StartDate = new DateTime(projectDto.startYear, projectDto.startMonth, projectDto.startDay),
-                    EndDate = new DateTime(projectDto.endYear, projectDto.endMonth, projectDto.endDay),
-                    Users = new List<UsersProjects>()
-                };
-                repository.Create(project);
-            }
+            _service.Create(projectViewModel);
         }
 
         [HttpPost]
         [Route("[action]")]
-        public void Update([FromBody]ProjectViewModel projectDto)
-        {
-            using (var uow = _uowFactory.CreateUnitOfWork())
-            {
-                IRepository<Project> repository = uow.CreateRepository<Project>();
-                Project projectWithUsers = repository.Get(projectDto.id, proj => proj.Users);
-
-                projectWithUsers.Name = projectDto.name;
-                projectWithUsers.Description = projectDto.description;
-                projectWithUsers.StartDate =
-                    new DateTime(projectDto.startYear, projectDto.startMonth, projectDto.startDay);
-                projectWithUsers.EndDate = new DateTime
-                    (projectDto.endYear, projectDto.endMonth, projectDto.endDay);
-
-                repository.Update(projectWithUsers);
-            }
+        public void Update([FromBody]ProjectViewModel projectViewModel)
+        {           
+           _service.Update(projectViewModel);
         }
 
-        [HttpPost]
-        [Route("[action]")]
-        public void AttachUser([FromBody] AttachUsersViewModel model)
-        {
-            using (var uow = _uowFactory.CreateUnitOfWork()) 
-            {
-                IRepository<User> userRepository = uow.CreateRepository<User>();
-                IRepository<Project> projectRepository = uow.CreateRepository<Project>();
-                User user = userRepository.Get(model.userId);
-                Project project = projectRepository.Get(model.projId);
-                project.Users.Add(new UsersProjects()
-                {
-                    User = user,
-                    UserId = user.Id,
-                    ProjectId = project.Id,
-                    Project = project
-                });
-
-                projectRepository.Update(project);
-            }
-        }
-
-        [HttpPost]
-        [Route("[action]")]
-        public void DetachUser([FromBody] AttachUsersViewModel model)
-        {
-            using (var uow = _uowFactory.CreateUnitOfWork()) 
-            {
-                IRepository<Project> projectRepository = uow.CreateRepository<Project>();
-                Project project = projectRepository.Get(model.projId, proj => proj.Users);
-                foreach (UsersProjects usersProject in project.Users)
-                {
-                    if (usersProject.UserId == model.userId)
-                    {
-                        project.Users.Remove(usersProject);
-                        break;
-                    }
-                }
-
-                projectRepository.Update(project);
-            }
-        }
+        
 
         [HttpDelete]
         [Route("[action]/{id}")]
         public void Delete(int id)
         {
-            using (var uow = _uowFactory.CreateUnitOfWork()) 
-            {
-                IRepository<Project> repository = uow.CreateRepository<Project>();
-                repository.Delete(id);
-            }
+            _service.Delete(id);
         }
     }
 }

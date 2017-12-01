@@ -64,7 +64,7 @@ export class ProjectsService
 
     public AttachUser(projectId: number, userId: number)
     {
-        let requestUrl: string ="api/Projects/AttachUser";
+        let requestUrl: string ="api/Users/Attach";
         let body = {
             projId: projectId,
             userId: userId
@@ -77,7 +77,7 @@ export class ProjectsService
     }
     public DetachUser(projectId: number, userId: number)
     {
-        let requestUrl: string ="api/Projects/DetachUser";
+        let requestUrl: string ="api/Users/Detach";
         let body = {
             projId: projectId,
             userId: userId

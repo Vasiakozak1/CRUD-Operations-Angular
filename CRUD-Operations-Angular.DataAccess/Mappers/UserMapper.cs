@@ -15,14 +15,27 @@ namespace CRUD_Operations_Angular.DataAccess.Mappers
                 throw new Exception();
             }
 
-            return new User
+            var result = new User
             {
                 Id = userViewModel.Id,
                 FirstName = userViewModel.FirstName,
                 LastName = userViewModel.LastName,
-                Age = userViewModel.Age,
-                Projects = new List<UsersProjects>()
+                Age = userViewModel.Age
             };
+            result.Projects = new List<UsersProjects>();
+            if (userViewModel.Projects != null && userViewModel.Projects.Count != 0)
+            {
+                foreach (var userProject in userViewModel.Projects)
+                {
+                    result.Projects.Add(new UsersProjects
+                    {
+                        UserId = userProject.UserId,
+                        ProjectId = userProject.ProjectId
+                    });
+                }
+            }
+
+            return result;
         }
 
         protected override IViewModel GetViewModel(IEntity entity)

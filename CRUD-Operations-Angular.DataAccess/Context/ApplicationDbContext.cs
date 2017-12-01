@@ -10,7 +10,7 @@ namespace CRUD_Operations_Angular.DataAccess.Context
     {
         public DbSet<Project> Projects { get; set; }
         public DbSet<User> Users { get; set; }
-
+        public DbSet<UsersProjects> UsersProjects { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(

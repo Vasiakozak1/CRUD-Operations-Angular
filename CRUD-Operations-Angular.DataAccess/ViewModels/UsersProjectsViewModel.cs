@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CRUD_Operations_Angular.DataAccess.ViewModels
 {
-    public class UsersProjectsViewModel: IViewModel
+    public class UsersProjectsViewModel
     {
         public int ProjectId { get; set; }
         public int UserId { get; set; }

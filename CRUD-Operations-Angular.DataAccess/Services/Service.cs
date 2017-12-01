@@ -12,7 +12,7 @@ namespace CRUD_Operations_Angular.DataAccess.Services
     public class Service<TSource, TTarget> : IService<TSource, TTarget> where TSource : class, IEntity where TTarget: IViewModel
     {
         private IUOWFactory _uowFactory;
-        public BaseMapper _mapper;
+        public BaseMapper Mapper { get; set; }
         public Service(IUOWFactory factory)
         {
             this._uowFactory = factory;
@@ -20,7 +20,7 @@ namespace CRUD_Operations_Angular.DataAccess.Services
 
         public void Create(TTarget item)
         {
-            TSource entity = (TSource)_mapper.Map(item);
+            TSource entity = (TSource)Mapper.Map(item);
             using (var uow = _uowFactory.CreateUnitOfWork())
             {
                 IRepository<TSource> repository = uow.CreateRepository<TSource>();
@@ -48,7 +48,7 @@ namespace CRUD_Operations_Angular.DataAccess.Services
                 {
                     throw new EntityNotFoundException();
                 }
-                viewModel = (TTarget)_mapper.Map(entity);
+                viewModel = (TTarget)Mapper.Map(entity);
             }
             
             return viewModel;
@@ -66,7 +66,7 @@ namespace CRUD_Operations_Angular.DataAccess.Services
                 {
                     throw new EntityNotFoundException();
                 }
-                viewModel = (TTarget)_mapper.Map(entity);
+                viewModel = (TTarget)Mapper.Map(entity);
                 
             }           
             return viewModel;
@@ -79,7 +79,7 @@ namespace CRUD_Operations_Angular.DataAccess.Services
             {
                 IRepository<TSource> repository = uow.CreateRepository<TSource>();
                 var elements = repository.GetAll();
-                var tempModelsList = _mapper.MapEnumerable(elements);
+                var tempModelsList = Mapper.MapEnumerable(elements);
                 foreach (var model in tempModelsList) 
                 {
                     targetEntities.Add((TTarget)model);
@@ -95,7 +95,7 @@ namespace CRUD_Operations_Angular.DataAccess.Services
             {
                 IRepository<TSource> repository = uow.CreateRepository<TSource>();
                 var elements = repository.GetAll(predicate);
-                var tempModelsList = _mapper.MapEnumerable(elements);
+                var tempModelsList = Mapper.MapEnumerable(elements);
                 foreach (var model in tempModelsList)
                 {
                     targetEntities.Add((TTarget) model);
@@ -111,7 +111,7 @@ namespace CRUD_Operations_Angular.DataAccess.Services
             {
                 IRepository<TSource> repository = uow.CreateRepository<TSource>();
                 var elements = repository.GetAll(element => ids.Contains(element.Id));
-                var tempModelsList = _mapper.MapEnumerable(elements);
+                var tempModelsList = Mapper.MapEnumerable(elements);
                 foreach (var model in tempModelsList)
                 {
                     targetEntities.Add((TTarget) model);
@@ -125,8 +125,25 @@ namespace CRUD_Operations_Angular.DataAccess.Services
             using (var uow = _uowFactory.CreateUnitOfWork())
             {
                 IRepository<TSource> repository = uow.CreateRepository<TSource>();
-                TSource itemToUpdate = (TSource)_mapper.Map(item);
+                TSource itemToUpdate = (TSource)Mapper.Map(item);
                 repository.Update(itemToUpdate);
+            }
+        }
+
+        public void Attach(int userId, int projectId)
+        {
+            using (var uow = _uowFactory.CreateUnitOfWork())
+            {
+                IRepository<TSource> repository = uow.CreateRepository<TSource>();
+                repository.Attach(userId, projectId);
+            }
+        }
+        public void Detach(int userId, int projectId)
+        {
+            using (var uow = _uowFactory.CreateUnitOfWork())
+            {
+                IRepository<TSource> repository = uow.CreateRepository<TSource>();
+                repository.Detach(userId, projectId);
             }
         }
     }

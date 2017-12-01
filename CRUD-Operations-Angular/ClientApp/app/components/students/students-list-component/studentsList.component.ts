@@ -40,7 +40,7 @@ export class StudentsListComponent {
     createPromise(): Promise<any>
     {
         let fun: Function = () => console.log('function is working');
-        fun.call(this)
+        
         var promise = new Promise(
             (reject, resolve) =>
             {

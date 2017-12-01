@@ -42,7 +42,6 @@ export class UpdateProjectComponent implements OnInit
             .GetProject(name, description, startDay, 
             startMonth, startYear, endDay, endMonth, endYear);
         proj.id = this.Project.id;
-        proj.users = this.Project.users;
 
         this.ProjectService.Update(proj)
             .then(() => this.Router.navigate(['/projects']));              

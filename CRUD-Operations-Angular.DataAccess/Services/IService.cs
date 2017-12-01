@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Collections.Generic;
 using CRUD_Operations_Angular.DataAccess.Entities;
 using CRUD_Operations_Angular.DataAccess.Context;
+using CRUD_Operations_Angular.DataAccess.Mappers;
 using CRUD_Operations_Angular.DataAccess.Repository;
 using CRUD_Operations_Angular.DataAccess.ViewModels;
 
@@ -18,5 +19,8 @@ namespace CRUD_Operations_Angular.DataAccess.Services
         IEnumerable<TTarget> GetAll(Expression<Func<TSource, bool>> predicate);
         void Update(TTarget item);
         void Delete(int id);
+        void Attach(int userId, int projectId);
+        void Detach(int userId, int projectId);
+        BaseMapper Mapper { get; set; }
     }
 }

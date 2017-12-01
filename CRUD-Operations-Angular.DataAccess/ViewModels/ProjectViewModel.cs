@@ -7,17 +7,17 @@ namespace CRUD_Operations_Angular.DataAccess.ViewModels
 {
     public class ProjectViewModel: IViewModel
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public string description { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
 
-        public int startDay { get; set; }
-        public int startMonth { get; set; }
-        public int startYear { get; set; }
+        public int StartDay { get; set; }
+        public int StartMonth { get; set; }
+        public int StartYear { get; set; }
 
-        public int endDay { get; set; }
-        public int endMonth { get; set; }
-        public int endYear { get; set; }
-        public ICollection<UsersProjectsViewModel> users { get; set; }
+        public int EndDay { get; set; }
+        public int EndMonth { get; set; }
+        public int EndYear { get; set; }
+        public ICollection<UsersProjectsViewModel> Users { get; set; }
     }
 }

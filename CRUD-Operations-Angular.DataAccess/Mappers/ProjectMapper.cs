@@ -15,15 +15,31 @@ namespace CRUD_Operations_Angular.DataAccess.Mappers
             {
                 throw new Exception();
             }
-            return new Project
+            var result = new Project
             {
-                Name = projectViewModel.name,
-                Description = projectViewModel.description,
-                StartDate = new DateTime(projectViewModel.startYear, projectViewModel.startMonth,
-                    projectViewModel.startDay),
-                EndDate = new DateTime(projectViewModel.endYear, projectViewModel.endMonth, projectViewModel.endDay),
-                Users = new List<UsersProjects>()
+                Id = projectViewModel.Id,
+                Name = projectViewModel.Name,
+                Description = projectViewModel.Description,
+                StartDate = new DateTime(projectViewModel.StartYear, projectViewModel.StartMonth,
+                    projectViewModel.StartDay),
+                EndDate = new DateTime(projectViewModel.EndYear, projectViewModel.EndMonth, projectViewModel.EndDay)
             };
+            result.Users = new List<UsersProjects>();
+
+            if (projectViewModel.Users != null && projectViewModel.Users.Count != 0)
+            {
+                result.Users = new List<UsersProjects>();
+                foreach (var userProject in projectViewModel.Users)
+                {
+                    result.Users.Add(new UsersProjects
+                    {
+                        UserId = userProject.UserId,
+                        ProjectId = userProject.ProjectId
+                    });
+                }
+            }
+
+            return result;
         }
 
         protected override IViewModel GetViewModel(IEntity entity)
@@ -33,23 +49,24 @@ namespace CRUD_Operations_Angular.DataAccess.Mappers
             {
                 throw new Exception();
             }
-            
+
             var result = new ProjectViewModel
-                {
-                    name = project.Name,
-                    description = project.Description,
+            {
+                Id = project.Id,
+                Name = project.Name,
+                Description = project.Description,
 
-                    startDay = project.StartDate.Day,
-                    startMonth = project.StartDate.Month,
-                    startYear = project.StartDate.Year,
+                StartDay = project.StartDate.Day,
+                StartMonth = project.StartDate.Month,
+                StartYear = project.StartDate.Year,
 
-                    endDay = project.EndDate.Day,
-                    endMonth = project.EndDate.Month,
-                    endYear = project.EndDate.Year
-                };
+                EndDay = project.EndDate.Day,
+                EndMonth = project.EndDate.Month,
+                EndYear = project.EndDate.Year
+            };
             if (project.Users == null || project.Users.Count == 0)
             {
-                result.users = new List<UsersProjectsViewModel>();
+                result.Users = new List<UsersProjectsViewModel>();
             }
             else
             {
@@ -62,7 +79,7 @@ namespace CRUD_Operations_Angular.DataAccess.Mappers
                         UserId = userProject.UserId
                     });
                 }
-                result.users = usersProjectsList;
+                result.Users = usersProjectsList;
             }
             return result;
         }

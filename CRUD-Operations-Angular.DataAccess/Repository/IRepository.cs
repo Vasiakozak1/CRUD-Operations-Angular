@@ -15,5 +15,7 @@ namespace CRUD_Operations_Angular.DataAccess.Repository
         void Create(TEntity entity);
         void Update(TEntity entity);
         void Delete(int id);
+        void Attach(int userId, int projectId);
+        void Detach(int userId, int projectId);
     }
 }
